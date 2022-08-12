@@ -1,0 +1,123 @@
+name: Dart package workflow
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+      run_format:
+        type: boolean
+        required: false
+        default: true
+      run_analyze:
+        type: boolean
+        required: false
+        default: true
+      run_tests:
+        type: boolean
+        required: false
+        default: true
+      concurrency:
+        required: false
+        type: number
+        default: 4
+      coverage_excludes:
+        required: false
+        type: string
+        default: ""
+      dart_sdk:
+        required: false
+        type: string
+        default: "stable"
+      working_directory:
+        required: false
+        type: string
+        default: "."
+      check_coverage:
+        required: false
+        type: boolean
+        default: false
+      min_coverage:
+        required: false
+        type: number
+        default: 100
+      format_directories:
+        required: false
+        type: string
+        default: "lib test example"
+      analyze_directories:
+        required: false
+        type: string
+        default: "lib test example"
+      report_on:
+        required: false
+        type: string
+        default: "lib"
+      upload_coverage_codecov:
+        required: false
+        type: boolean
+        default: true
+      codecov_fail_if_error:
+        required: false
+        type: boolean
+        default: true
+      codecov_flags:
+        required: false
+        type: string
+        default: ""
+      codecov_token:
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: ${{inputs.runs_on}}
+
+    steps:
+      - name: 📚 Git checkout
+        uses: actions/checkout@v3
+
+      - name: 🎯 Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{inputs.dart_sdk}}
+
+      - name: 📦 Install dependencies
+        run: dart pub get
+
+      - name: ✨ Check formatting
+        if: ${{inputs.run_format}}
+        run: dart format --set-exit-if-changed ${{inputs.format_directories}}
+
+      - name: 🕵️ Analyze
+        if: ${{inputs.run_analyze}}
+        run: dart analyze --fatal-infos --fatal-warnings ${{inputs.analyze_directories}}
+
+      - name: 🧪 Run tests
+        if: ${{inputs.run_tests}}
+        run: |
+          dart pub global activate coverage
+          dart test -j ${{inputs.concurrency}} --coverage=coverage && dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=${{inputs.report_on}}
+
+      - name: 📊 Check code coverage
+        if: ${{inputs.check_coverage}}
+        uses: VeryGoodOpenSource/very_good_coverage@v1
+        with:
+          path: ${{inputs.working_directory}}/coverage/lcov.info
+          exclude: ${{inputs.coverage_excludes}}
+          min_coverage: ${{inputs.min_coverage}}
+
+      - name: ⬆️ Upload coverage to Codecov
+        if: ${{inputs.upload_coverage_codecov}}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{inputs.codecov_token}}
+          fail_ci_if_error: ${{inputs.codecov_fail_if_error}}
+          flags: ${{inputs.codecov_flags}}

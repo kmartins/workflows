@@ -1,0 +1,64 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-dart-package:
+    uses: ./.github/workflows/dart_package.yaml
+    with:
+      working_directory: examples/dart_package
+      format_directories: lib test
+      analyze_directories: lib test
+      codecov_flags: "dart"
+
+  verify-flutter-package:
+    uses: ./.github/workflows/flutter_package.yaml
+    with:
+      flutter_channel: stable
+      working_directory: examples/flutter_package
+      format_directories: lib test
+      analyze_directories: lib test
+      codecov_flags: "flutter"
+
+  verify-pana-dart:
+    uses: ./.github/workflows/pana.yaml
+    with:
+      min_score: 95
+      working_directory: examples/dart_package
+
+  verify-pana-flutter:
+    uses: ./.github/workflows/pana.yaml
+    with:
+      min_score: 95
+      working_directory: examples/flutter_package
+
+  verify-flutter-app:
+    uses: ./.github/workflows/flutter_app.yaml
+    with:
+      flutter_channel: stable
+      working_directory: examples/flutter_app
+      firebase_files: true
+
+  verify-build-flutter-app:
+    uses: ./.github/workflows/build_flutter_app.yaml
+    with:
+      flutter_channel: stable
+      working_directory: examples/flutter_app
+      runs_on: macos-latest
+      build_android: true
+      build_android_bundle: true
+      build_ios: true
+      build_web: true
+      build_macos: true
+      build_linux: true
+      build_windows: true
+      firebase_files: true
+
+  verify-semantic-pull-request:
+    uses: ./.github/workflows/semantic_pull_request.yaml
+    with:
+      scopes: "build_flutter_app, dart_package, flutter_app, flutter_package, pana, semantic_pr"

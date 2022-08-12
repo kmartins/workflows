@@ -1,0 +1,201 @@
+name: Build Flutter app workflow
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        type: string
+        required: false
+        default: ubuntu-latest
+      flutter_channel:
+        required: false
+        type: string
+        default: "stable"
+      flutter_version:
+        required: false
+        type: string
+        default: "3.0.5"
+      working_directory:
+        required: false
+        type: string
+        default: "."
+      java_version:
+        required: false
+        type: string
+        default: "12.x"
+      firebase_files:
+        type: boolean
+        required: false
+        default: false
+      firebase_options_file_path:
+        type: string
+        required: false
+        default: "lib/firebase_options.dart"
+      android_google_services:
+        type: string
+        required: false
+        default: "../../templates/google-services.json"
+      build_type:
+        type: string
+        required: false
+        default: "debug"
+      build_android:
+        type: boolean
+        required: false
+        default: false
+      build_android_bundle:
+        type: boolean
+        required: false
+        default: false
+      build_ios:
+        type: boolean
+        required: false
+        default: false
+      build_web:
+        type: boolean
+        required: false
+        default: false
+      build_macos:
+        type: boolean
+        required: false
+        default: false
+      build_linux:
+        type: boolean
+        required: false
+        default: false
+      build_windows:
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  build-mobile-web-macos:
+    if: ${{inputs.build_android}} || ${{inputs.build_android_bundle}} ||
+      ${{inputs.build_ios}} || ${{inputs.build_web}} || ${{inputs.build_macos}}
+
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: ${{inputs.runs_on}}
+
+    steps:
+      - name: 📚 Git checkout
+        uses: actions/checkout@v2
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: flutter packages get
+
+      - name: ☕ Set up Java
+        if: inputs.build_android || inputs.build_android_bundle
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: ${{inputs.java_version}}
+          cache: "gradle"
+
+      - name: 🔥 Firebase options file path
+        if: ${{inputs.firebase_files}}
+        run: mv ../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+
+      - name: 📂 Google services in Android
+        if: inputs.build_android || inputs.build_android_bundle && inputs.firebase_files
+        run: mv ${{inputs.android_google_services}} android/app/google-services.json
+
+      - name: 🗃️ Google services in iOS
+        if: inputs.build_ios && inputs.firebase_files
+        run: |
+          mv ../../templates/GoogleService-Info.plist ios/GoogleService-Info.plist
+          mv ../../templates/firebase_app_id_file.json ios/firebase_app_id_file.json
+
+      - name: 🤖 Build apk
+        if: ${{inputs.build_android}}
+        run: flutter build apk --${{inputs.build_type}} --no-pub
+
+      - name: 📱 Build app bundle
+        if: ${{inputs.build_android_bundle}}
+        run: flutter build appbundle --${{inputs.build_type}} --no-pub
+
+      - name: 🍎 Build iOS
+        if: ${{inputs.build_ios}}
+        run: flutter build ios --${{inputs.build_type}} --no-codesign --no-pub
+
+      - name: 🌐 Build web
+        if: ${{inputs.build_web}}
+        run: flutter build web --no-pub
+
+      - name: 🖥️ Build macOS
+        if: ${{inputs.build_macos}}
+        run: flutter build macos --${{inputs.build_type}} --no-pub
+
+  build-linux:
+    if: ${{inputs.build_linux}}
+
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📚 Git checkout
+        uses: actions/checkout@v2
+
+      - name: 📦 Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: flutter packages get
+
+      - name: 🔥 Firebase options file path
+        if: ${{inputs.firebase_files}}
+        run: mv ../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+
+      - name: 🐧 Build Linux
+        run: flutter build linux --${{inputs.build_type}} --no-pub
+
+  build-windows:
+    if: ${{inputs.build_windows}}
+
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: windows-latest
+
+    steps:
+      - name: 📚 Git checkout
+        uses: actions/checkout@v2
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: flutter packages get
+
+      - name: 🔥 Firebase options file path
+        if: ${{inputs.firebase_files}}
+        run: mv ../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+
+      - name: 🪟 Build Windows
+        run: flutter build windows --${{inputs.build_type}} --no-pub

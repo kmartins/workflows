@@ -1,0 +1,27 @@
+name: Semantic pull request workflow
+
+on:
+  workflow_call:
+    inputs:
+      types:
+        required: false
+        type: string
+        default: "feat, fix, docs, style, refactor, perf, test, build, ci, revert"
+      scopes:
+        required: false
+        type: string
+
+jobs:
+  build:
+    if: github.event_name == 'pull_request'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔍 Ensure pull request title is semantic
+        uses: amannn/action-semantic-pull-request@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: ${{inputs.types}}
+          scopes: ${{inputs.scopes}}

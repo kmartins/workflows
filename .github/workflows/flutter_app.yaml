@@ -1,0 +1,132 @@
+name: Flutter app workflow
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+      run_format:
+        type: boolean
+        required: false
+        default: true
+      run_analyze:
+        type: boolean
+        required: false
+        default: true
+      run_tests:
+        type: boolean
+        required: false
+        default: true
+      concurrency:
+        required: false
+        type: number
+        default: 4
+      coverage_excludes:
+        required: false
+        type: string
+        default: ""
+      flutter_channel:
+        required: false
+        type: string
+        default: "stable"
+      flutter_version:
+        required: false
+        type: string
+        default: "3.0.5"
+      working_directory:
+        required: false
+        type: string
+        default: "."
+      format_directories:
+        required: false
+        type: string
+        default: "lib test"
+      analyze_directories:
+        required: false
+        type: string
+        default: "lib test"
+      check_coverage:
+        required: false
+        type: boolean
+        default: false
+      min_coverage:
+        required: false
+        type: number
+        default: 100
+      upload_coverage_codecov:
+        required: false
+        type: boolean
+        default: false
+      codecov_fail_if_error:
+        required: false
+        type: boolean
+        default: true
+      codecov_flag:
+        required: false
+        type: string
+        default: ""
+      firebase_files:
+        type: boolean
+        required: false
+        default: false
+      firebase_options_file_path:
+        type: string
+        required: false
+        default: "lib/firebase_options.dart"
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: ${{inputs.runs_on}}
+
+    steps:
+      - name: 📚 Git checkout
+        uses: actions/checkout@v2
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: flutter packages get
+
+      - name: ✨ Check formatting
+        if: ${{inputs.run_format}}
+        run: flutter format --set-exit-if-changed ${{inputs.format_directories}}
+
+      - name: 🔥 Firebase options file path
+        if: ${{inputs.firebase_files}}
+        run: mv ../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+
+      - name: 🕵️ Analyze
+        if: ${{inputs.run_analyze}}
+        run: flutter analyze ${{inputs.analyze_directories}}
+
+      - name: 🧪 Run tests
+        if: ${{inputs.run_tests}}
+        run: flutter test -j ${{inputs.concurrency}} --no-pub --coverage --test-randomize-ordering-seed random
+
+      - name: 📊 Check code coverage
+        if: ${{inputs.check_coverage}}
+        uses: VeryGoodOpenSource/very_good_coverage@v1
+        with:
+          path: ${{inputs.working_directory}}/coverage/lcov.info
+          exclude: ${{inputs.coverage_excludes}}
+          min_coverage: ${{inputs.min_coverage}}
+
+      - name: ⬆️ Upload coverage to Codecov
+        if: ${{inputs.upload_coverage_codecov}}
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ${{inputs.working_directory}}/coverage
+          fail_ci_if_error: ${{inputs.codecov_fail_if_error}}
+          flags: ${{inputs.codecov_flag}}
+          token: ${{inputs.codecov_token}}
