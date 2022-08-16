@@ -67,5 +67,5 @@ jobs:
     uses: ./.github/workflows/semantic_pull_request.yaml
     with:
       scopes: |
-        "build_flutter_app, dart_package, flutter_app, 
-        flutter_package, pana, semantic_pr, deps"
+        build_flutter_app, dart_package, flutter_app,
+        flutter_package, pana, semantic_pr, deps
