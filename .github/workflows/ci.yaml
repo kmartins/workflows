@@ -42,6 +42,7 @@ jobs:
       flutter_channel: stable
       working_directory: examples/flutter_app
       firebase_files: true
+      firebase_options_file_path_source: ../../templates/firebase_options.dart
 
   verify-build-flutter-app:
     uses: ./.github/workflows/build_flutter_app.yaml
@@ -57,6 +58,10 @@ jobs:
       build_linux: true
       build_windows: true
       firebase_files: true
+      firebase_options_file_path_source: ../../templates/firebase_options.dart
+      android_google_services: ../../templates/google-services.json
+      ios_google_services: ../../templates/GoogleService-Info.plist
+      ios_firebase_app_id: ../../templates/firebase_app_id_file.json
 
   verify-semantic-pull-request:
     uses: ./.github/workflows/semantic_pull_request.yaml

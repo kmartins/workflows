@@ -71,7 +71,10 @@ on:
         type: boolean
         required: false
         default: false
-      firebase_options_file_path:
+      firebase_options_file_path_source:
+        type: string
+        required: false
+      firebase_options_file_path_target:
         type: string
         required: false
         default: "lib/firebase_options.dart"
@@ -104,7 +107,7 @@ jobs:
 
       - name: 🔥 Firebase options file path
         if: ${{inputs.firebase_files}}
-        run: mv ${{github.action_path}}../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+        run: mv ${{inputs.firebase_options_file_path_source}} ${{inputs.firebase_options_file_path_target}}
 
       - name: 🕵️ Analyze
         if: ${{inputs.run_analyze}}
