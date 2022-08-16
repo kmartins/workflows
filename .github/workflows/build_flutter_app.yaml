@@ -27,14 +27,22 @@ on:
         type: boolean
         required: false
         default: false
-      firebase_options_file_path:
+      firebase_options_file_path_source:
+        type: string
+        required: false
+      firebase_options_file_path_target:
         type: string
         required: false
         default: "lib/firebase_options.dart"
       android_google_services:
         type: string
         required: false
-        default: "../../templates/google-services.json"
+      ios_google_services:
+        type: string
+        required: false
+      ios_firebase_app_id:
+        type: string
+        required: false
       build_type:
         type: string
         required: false
@@ -103,7 +111,7 @@ jobs:
 
       - name: 🔥 Firebase options file path
         if: ${{inputs.firebase_files}}
-        run: mv ${{github.action_path}}../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+        run: mv ${{inputs.firebase_options_file_path_source}} ${{inputs.firebase_options_file_path_target}}
 
       - name: 📂 Google services in Android
         if: inputs.build_android || inputs.build_android_bundle && inputs.firebase_files
@@ -112,8 +120,8 @@ jobs:
       - name: 🗃️ Google services in iOS
         if: inputs.build_ios && inputs.firebase_files
         run: |
-          mv ${{github.action_path}}../../templates/GoogleService-Info.plist ios/GoogleService-Info.plist
-          mv ${{github.action_path}}../../templates/firebase_app_id_file.json ios/firebase_app_id_file.json
+          mv ${{inputs.ios_google_services}} ios/GoogleService-Info.plist
+          mv ${{inputs.ios_firebase_app_id}} ios/firebase_app_id_file.json
 
       - name: 🤖 Build apk
         if: ${{inputs.build_android}}
@@ -165,7 +173,7 @@ jobs:
 
       - name: 🔥 Firebase options file path
         if: ${{inputs.firebase_files}}
-        run: mv ${{github.action_path}}../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+        run: mv ${{inputs.firebase_options_file_path_source}} ${{inputs.firebase_options_file_path_target}}
 
       - name: 🐧 Build Linux
         run: flutter build linux --${{inputs.build_type}} --no-pub
@@ -195,7 +203,7 @@ jobs:
 
       - name: 🔥 Firebase options file path
         if: ${{inputs.firebase_files}}
-        run: mv ${{github.action_path}}../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+        run: mv ${{inputs.firebase_options_file_path_source}} ${{inputs.firebase_options_file_path_target}}
 
       - name: 🪟 Build Windows
         run: flutter build windows --${{inputs.build_type}} --no-pub

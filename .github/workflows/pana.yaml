@@ -41,4 +41,8 @@ jobs:
         run: flutter pub global activate pana ${{inputs.pana_version}}
 
       - name: 💯 Verify Pub score
-        run: ${{github.action_path}}../../scripts/verify_pub_score.sh ${{inputs.min_score}}
+        run: |
+          PANA=$(pana . --no-warning); PANA_SCORE=$(echo $PANA | sed -n "s/.*Points: \([0-9]*\)\/\([0-9]*\)./\1\/\2/p")
+          echo "Score: $PANA_SCORE"
+          IFS='/'; read -a SCORE_ARR <<< "$PANA_SCORE"; SCORE=SCORE_ARR[0];
+          if (( $SCORE < ${{inputs.min_score}} )); then echo "The minimum score of ${{inputs.min_score}} was not met!"; exit 1; fi
