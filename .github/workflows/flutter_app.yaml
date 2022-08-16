@@ -104,7 +104,7 @@ jobs:
 
       - name: 🔥 Firebase options file path
         if: ${{inputs.firebase_files}}
-        run: mv ../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
+        run: mv ${{github.action_path}}../../templates/firebase_options.dart ${{inputs.firebase_options_file_path}}
 
       - name: 🕵️ Analyze
         if: ${{inputs.run_analyze}}
