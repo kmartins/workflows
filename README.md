@@ -21,17 +21,17 @@ uses: kmartins/workflows/.github/workflows/flutter_package.yaml@flutter_package-
 
 Workflow for verifying package score on the [pub.dev][pub]
 ```yaml
-uses: kmartins/workflows/.github/workflows/pana.yaml@pana-v1.0.1
+uses: kmartins/workflows/.github/workflows/pana.yaml@pana-v1.0.2
 ```
 
 Workflow for your Flutter app - Works with the Firebase
 ```yaml
-uses: kmartins/workflows/.github/workflows/flutter_app.yaml@flutter_app-v1.0.1
+uses: kmartins/workflows/.github/workflows/flutter_app.yaml@flutter_app-v1.0.2
 ```
 
 Workflow for building your Flutter app (There are no check formatting, analysis, and test) - Works with the Firebase
 ```yaml
-uses: kmartins/workflows/.github/workflows/build_flutter_app.yaml@build_flutter_app-v1.0.1
+uses: kmartins/workflows/.github/workflows/build_flutter_app.yaml@build_flutter_app-v1.0.2
 ```
 
 Workflow for ensuring `pull request` title is semantic - [Angular Convention][angular_convention]
