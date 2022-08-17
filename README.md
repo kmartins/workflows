@@ -11,12 +11,12 @@ It's a copy of the [very good workflows][very_good_workflows], but with de some 
 
 Workflow for Dart packages
 ```yaml
-uses: kmartins/workflows/.github/workflows/dart_package.yaml@dart_package-v1.0.1
+uses: kmartins/workflows/.github/workflows/dart_package.yaml@dart_package-v1.0.2
 ```
 
 Workflow for Flutter packages
 ```yaml
-uses: kmartins/workflows/.github/workflows/flutter_package.yaml@flutter_package-v1.0.1
+uses: kmartins/workflows/.github/workflows/flutter_package.yaml@flutter_package-v1.0.2
 ```
 
 Workflow for verifying package score on the [pub.dev][pub]

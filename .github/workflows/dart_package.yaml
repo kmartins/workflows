@@ -38,7 +38,7 @@ on:
       check_coverage:
         required: false
         type: boolean
-        default: false
+        default: true
       min_coverage:
         required: false
         type: number
