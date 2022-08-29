@@ -21,7 +21,7 @@ uses: kmartins/workflows/.github/workflows/flutter_package.yaml@flutter_package-
 
 Workflow for verifying package score on the [pub.dev][pub]
 ```yaml
-uses: kmartins/workflows/.github/workflows/pana.yaml@pana-v1.0.3
+uses: kmartins/workflows/.github/workflows/pana.yaml@pana-v1.0.4
 ```
 
 Workflow for your Flutter app - Works with the Firebase

@@ -6,7 +6,7 @@ on:
       min_score:
         required: false
         type: number
-        default: 120
+        default: 130
       pana_version:
         required: false
         type: string
