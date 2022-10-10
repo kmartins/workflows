@@ -108,7 +108,7 @@ jobs:
 
       - name: 📊 Check code coverage
         if: ${{inputs.check_coverage}}
-        uses: VeryGoodOpenSource/very_good_coverage@v1
+        uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
           path: ${{inputs.working_directory}}/coverage/lcov.info
           exclude: ${{inputs.coverage_excludes}}
