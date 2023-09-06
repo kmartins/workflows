@@ -6,7 +6,7 @@ on:
       types:
         required: false
         type: string
-        default: "feat, fix, docs, style, refactor, perf, test, build, ci, revert"
+        default: "['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'revert']"
       scopes:
         required: false
         type: string

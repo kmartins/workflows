@@ -122,6 +122,6 @@ jobs:
         if: ${{inputs.upload_coverage_codecov}}
         uses: codecov/codecov-action@v3
         with:
-          token: ${{inputs.codecov_token}}
+          token: ${{secrets.codecov_token}}
           fail_ci_if_error: ${{inputs.codecov_fail_if_error}}
           flags: ${{inputs.codecov_flags}}
