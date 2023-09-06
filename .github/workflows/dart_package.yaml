@@ -75,10 +75,10 @@ on:
         required: false
         type: string
         default: ""
+
+    secrets:
       codecov_token:
         required: false
-        type: string
-        default: ""
 
 jobs:
   build:
