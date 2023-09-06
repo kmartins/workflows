@@ -6,7 +6,7 @@ on:
       types:
         required: false
         type: string
-        default: "['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'revert']"
+        default: "|\nfeat\nfix\ndocs\nstyle\nrefactor\nperf\ntest\nbuild\nci\nrevert"
       scopes:
         required: false
         type: string
@@ -23,15 +23,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          types: |
-            feat
-            fix
-            docs
-            style
-            refactor
-            perf
-            test
-            build
-            ci
-            revert
+          types: ${{inputs.types}}
           scopes: ${{inputs.scopes}}
