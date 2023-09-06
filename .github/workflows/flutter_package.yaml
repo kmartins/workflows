@@ -34,11 +34,15 @@ on:
       flutter_version:
         required: false
         type: string
-        default: "3.0.5"
+        default: ""
       working_directory:
         required: false
         type: string
         default: "."
+      format_line_length:
+        required: false
+        type: string
+        default: "80"
       format_directories:
         required: false
         type: string
@@ -90,13 +94,14 @@ jobs:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
           cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
       - name: 📦 Install dependencies
         run: flutter packages get
 
       - name: ✨ Check formatting
         if: ${{inputs.run_format}}
-        run: flutter format --set-exit-if-changed ${{inputs.format_directories}}
+        run: dart format --line-length ${{inputs.format_line_length}} --set-exit-if-changed ${{inputs.format_directories}}
 
       - name: 🕵️ Analyze
         if: ${{inputs.run_analyze}}
