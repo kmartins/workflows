@@ -24,6 +24,11 @@ Workflow for verifying package score on the [pub.dev][pub]
 uses: kmartins/workflows/.github/workflows/pana.yaml@v1
 ```
 
+Workflow for publish your package on the [pub.dev][pub]
+```yaml
+uses: kmartins/workflows/.github/workflows/pub_publish.yaml@v1
+```
+
 Workflow for your Flutter app - Works with the Firebase
 ```yaml
 uses: kmartins/workflows/.github/workflows/flutter_app.yaml@v1
@@ -44,12 +49,12 @@ uses: kmartins/workflows/.github/workflows/semantic_pull_request.yaml@v1
 
 ## What are the next steps?
 
-- [ ] Publish **Dart** and **Flutter** `package` on the [pub.dev][pub]
+- [X] Publish **Dart** and **Flutter** `package` on the [pub.dev][pub]
 - [ ] Publish the **Android** app on the [Play Store][play_store]
 - [ ] Publish the **iO**S app on the [App Store][app_store]
 - [ ] Publish the **macOS** app on the [App Store][app_store]
 - [ ] Deploy **Web** app on the [Firebase Hosting][firebase_hosting]  
-- [ ] Firebase Services - [Functions][firebase_functions] and [Firestore][firebase_firestore]
+- [X] Firebase Services - [Functions][firebase_functions] and [Firestore][firebase_firestore]
 
 ## 📝 Maintainers
 
