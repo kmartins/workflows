@@ -43,6 +43,14 @@ on:
         required: false
         type: number
         default: 100
+      check_ignore:
+        required: false
+        type: boolean
+        default: false
+      format_line_length:
+        required: false
+        type: string
+        default: "80"
       format_directories:
         required: false
         type: string
@@ -67,10 +75,10 @@ on:
         required: false
         type: string
         default: ""
+
+    secrets:
       codecov_token:
         required: false
-        type: string
-        default: ""
 
 jobs:
   build:
@@ -94,7 +102,7 @@ jobs:
 
       - name: ✨ Check formatting
         if: ${{inputs.run_format}}
-        run: dart format --set-exit-if-changed ${{inputs.format_directories}}
+        run: dart format --line-length ${{inputs.format_line_length}} --set-exit-if-changed ${{inputs.format_directories}}
 
       - name: 🕵️ Analyze
         if: ${{inputs.run_analyze}}
@@ -104,11 +112,11 @@ jobs:
         if: ${{inputs.run_tests}}
         run: |
           dart pub global activate coverage
-          dart test -j ${{inputs.concurrency}} --coverage=coverage && dart pub global run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=${{inputs.report_on}}
+          dart test -j ${{inputs.concurrency}} --coverage=coverage && dart pub global run coverage:format_coverage --lcov ${{(inputs.check_ignore && '--check-ignore') || ''}} --in=coverage --out=coverage/lcov.info --packages=.dart_tool/package_config.json --report-on=${{inputs.report_on}}
 
       - name: 📊 Check code coverage
         if: ${{inputs.check_coverage}}
-        uses: VeryGoodOpenSource/very_good_coverage@v1
+        uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
           path: ${{inputs.working_directory}}/coverage/lcov.info
           exclude: ${{inputs.coverage_excludes}}
@@ -118,6 +126,6 @@ jobs:
         if: ${{inputs.upload_coverage_codecov}}
         uses: codecov/codecov-action@v3
         with:
-          token: ${{inputs.codecov_token}}
+          token: ${{secrets.codecov_token}}
           fail_ci_if_error: ${{inputs.codecov_fail_if_error}}
           flags: ${{inputs.codecov_flags}}

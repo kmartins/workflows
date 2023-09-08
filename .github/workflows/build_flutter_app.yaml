@@ -14,7 +14,7 @@ on:
       flutter_version:
         required: false
         type: string
-        default: "3.0.5"
+        default: ""
       working_directory:
         required: false
         type: string
@@ -97,6 +97,7 @@ jobs:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
           cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
       - name: 📦 Install dependencies
         run: flutter packages get
@@ -167,6 +168,7 @@ jobs:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
           cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
       - name: 📦 Install dependencies
         run: flutter packages get
@@ -197,6 +199,7 @@ jobs:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
           cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
       - name: 📦 Install dependencies
         run: flutter packages get

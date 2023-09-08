@@ -14,6 +14,8 @@ jobs:
       format_directories: lib test
       analyze_directories: lib test
       codecov_flags: "dart"
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
 
   verify-flutter-package:
     uses: ./.github/workflows/flutter_package.yaml
@@ -23,6 +25,8 @@ jobs:
       format_directories: lib test
       analyze_directories: lib test
       codecov_flags: "flutter"
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}
 
   verify-pana-dart:
     uses: ./.github/workflows/pana.yaml

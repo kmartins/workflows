@@ -11,32 +11,32 @@ It's a copy of the [very good workflows][very_good_workflows], but with de some 
 
 Workflow for Dart packages
 ```yaml
-uses: kmartins/workflows/.github/workflows/dart_package.yaml@dart_package-v1.0.2
+uses: kmartins/workflows/.github/workflows/dart_package.yaml@v1
 ```
 
 Workflow for Flutter packages
 ```yaml
-uses: kmartins/workflows/.github/workflows/flutter_package.yaml@flutter_package-v1.0.2
+uses: kmartins/workflows/.github/workflows/flutter_package.yaml@v1
 ```
 
 Workflow for verifying package score on the [pub.dev][pub]
 ```yaml
-uses: kmartins/workflows/.github/workflows/pana.yaml@pana-v1.0.4
+uses: kmartins/workflows/.github/workflows/pana.yaml@v1
 ```
 
 Workflow for your Flutter app - Works with the Firebase
 ```yaml
-uses: kmartins/workflows/.github/workflows/flutter_app.yaml@flutter_app-v1.0.3
+uses: kmartins/workflows/.github/workflows/flutter_app.yaml@v1
 ```
 
 Workflow for building your Flutter app (There are no check formatting, analysis, and test) - Works with the Firebase
 ```yaml
-uses: kmartins/workflows/.github/workflows/build_flutter_app.yaml@build_flutter_app-v1.0.3
+uses: kmartins/workflows/.github/workflows/build_flutter_app.yaml@v1
 ```
 
 Workflow for ensuring `pull request` title is semantic - [Angular Convention][angular_convention]
 ```yaml
-uses: kmartins/workflows/.github/workflows/semantic_pull_request.yaml@semantic_pr-v1.0.1
+uses: kmartins/workflows/.github/workflows/semantic_pull_request.yaml@v1
 ```
 
 > Look at the `workflow` files to know what `inputs` are available.</br>

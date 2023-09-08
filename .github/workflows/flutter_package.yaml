@@ -34,11 +34,15 @@ on:
       flutter_version:
         required: false
         type: string
-        default: "3.0.5"
+        default: ""
       working_directory:
         required: false
         type: string
         default: "."
+      format_line_length:
+        required: false
+        type: string
+        default: "80"
       format_directories:
         required: false
         type: string
@@ -67,10 +71,9 @@ on:
         required: false
         type: string
         default: ""
+    secrets:
       codecov_token:
         required: false
-        type: string
-        default: ""
 
 jobs:
   build:
@@ -90,13 +93,14 @@ jobs:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
           cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
       - name: 📦 Install dependencies
         run: flutter packages get
 
       - name: ✨ Check formatting
         if: ${{inputs.run_format}}
-        run: flutter format --set-exit-if-changed ${{inputs.format_directories}}
+        run: dart format --line-length ${{inputs.format_line_length}} --set-exit-if-changed ${{inputs.format_directories}}
 
       - name: 🕵️ Analyze
         if: ${{inputs.run_analyze}}
@@ -108,7 +112,7 @@ jobs:
 
       - name: 📊 Check code coverage
         if: ${{inputs.check_coverage}}
-        uses: VeryGoodOpenSource/very_good_coverage@v1
+        uses: VeryGoodOpenSource/very_good_coverage@v2
         with:
           path: ${{inputs.working_directory}}/coverage/lcov.info
           exclude: ${{inputs.coverage_excludes}}
@@ -118,6 +122,6 @@ jobs:
         if: ${{inputs.upload_coverage_codecov}}
         uses: codecov/codecov-action@v3
         with:
-          token: ${{inputs.codecov_token}}
+          token: ${{secrets.codecov_token}}
           fail_ci_if_error: ${{inputs.codecov_fail_if_error}}
           flags: ${{inputs.codecov_flags}}
