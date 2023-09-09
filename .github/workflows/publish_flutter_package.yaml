@@ -1,4 +1,4 @@
-name: Publish to pub.dev
+name: Publish flutter package in the pub.dev
 
 on:
   workflow_call:
@@ -30,14 +30,19 @@ jobs:
       - name: 📚 Git Checkout
         uses: actions/checkout@v4
 
-      - name: 🎯 Setup Dart
-        uses: dart-lang/setup-dart@v1
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
       - name: 📦 Install dependencies
-        run: dart pub get
+        run: flutter packages get
 
       - name: 🌵 Publish - dry run
-        run: dart pub publish --dry-run
+        run: flutter pub publish --dry-run
 
       - name: 📢 Publish to pub.dev
-        run: dart pub publish -f
+        run: flutter pub publish -f

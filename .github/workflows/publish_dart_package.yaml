@@ -1,0 +1,43 @@
+name: Publish dart package in the pub.dev
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+      working_directory:
+        required: false
+        type: string
+      runs_on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+
+jobs:
+  publish:
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: ${{inputs.working_directory}}
+
+    runs-on: ${{inputs.runs_on}}
+
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v4
+
+      - name: 🎯 Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: 📦 Install dependencies
+        run: dart pub get
+
+      - name: 🌵 Publish - dry run
+        run: dart pub publish --dry-run
+
+      - name: 📢 Publish to pub.dev
+        run: dart pub publish -f
