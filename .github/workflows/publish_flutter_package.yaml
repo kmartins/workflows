@@ -6,13 +6,6 @@ on:
       environment:
         required: false
         type: string
-      working_directory:
-        required: false
-        type: string
-      runs_on:
-        required: false
-        type: string
-        default: "ubuntu-latest"
       flutter_channel:
         required: false
         type: string
@@ -21,13 +14,22 @@ on:
         required: false
         type: string
         default: ""
+      working_directory:
+        required: false
+        type: string
+        default: "."
+      runs_on:
+        required: false
+        type: string
+        default: "ubuntu-latest"
+
+    secrets:
+      pub_credentials:
+        required: true
 
 jobs:
   publish:
     environment: ${{ inputs.environment }}
-    permissions:
-      id-token: write
-
     defaults:
       run:
         working-directory: ${{inputs.working_directory}}
@@ -46,11 +48,16 @@ jobs:
           cache: true
           cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
-      - name: 📦 Install dependencies
-        run: flutter packages get
+      - name: 📦 Install Dependencies
+        run: flutter pub get
 
-      - name: 🌵 Publish - dry run
+      - name: 🔐 Setup Pub Credentials
+        run: |
+          mkdir -p $XDG_CONFIG_HOME/dart
+          echo '${{secretes.pub_credentials}}' > "$XDG_CONFIG_HOME/dart/pub-credentials.json"
+
+      - name: 🌵 Dry Run
         run: flutter pub publish --dry-run
 
-      - name: 📢 Publish to pub.dev
+      - name: 📢 Publish
         run: flutter pub publish -f
