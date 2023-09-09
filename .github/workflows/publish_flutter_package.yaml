@@ -22,10 +22,9 @@ on:
         required: false
         type: string
         default: "ubuntu-latest"
-
-    secrets:
       pub_credentials:
         required: true
+        type: string
 
 jobs:
   publish:
@@ -54,7 +53,7 @@ jobs:
       - name: 🔐 Setup Pub Credentials
         run: |
           mkdir -p $XDG_CONFIG_HOME/dart
-          echo '${{secretes.pub_credentials}}' > "$XDG_CONFIG_HOME/dart/pub-credentials.json"
+          echo '${{inputs.pub_credentials}}' > "$XDG_CONFIG_HOME/dart/pub-credentials.json"
 
       - name: 🌵 Dry Run
         run: flutter pub publish --dry-run
