@@ -13,6 +13,14 @@ on:
         required: false
         type: string
         default: "ubuntu-latest"
+      flutter_channel:
+        required: false
+        type: string
+        default: "stable"
+      flutter_version:
+        required: false
+        type: string
+        default: ""
 
 jobs:
   publish:
