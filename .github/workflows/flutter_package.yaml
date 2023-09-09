@@ -71,9 +71,9 @@ on:
         required: false
         type: string
         default: ""
-    secrets:
       codecov_token:
         required: false
+        type: boolean
 
 jobs:
   build:
@@ -122,6 +122,6 @@ jobs:
         if: ${{inputs.upload_coverage_codecov}}
         uses: codecov/codecov-action@v3
         with:
-          token: ${{secrets.codecov_token}}
+          token: ${{inputs.codecov_token}}
           fail_ci_if_error: ${{inputs.codecov_fail_if_error}}
           flags: ${{inputs.codecov_flags}}

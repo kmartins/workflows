@@ -9,23 +9,23 @@ on:
 jobs:
   verify-dart-package:
     uses: ./.github/workflows/dart_package.yaml
+    secrets: inherit
     with:
       working_directory: examples/dart_package
       format_directories: lib test
       analyze_directories: lib test
       codecov_flags: "dart"
-    secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
 
   verify-flutter-package:
     uses: ./.github/workflows/flutter_package.yaml
+    secrets: inherit
     with:
       flutter_channel: stable
       working_directory: examples/flutter_package
       format_directories: lib test
       analyze_directories: lib test
       codecov_flags: "flutter"
-    secrets:
       codecov_token: ${{ secrets.CODECOV_TOKEN }}
 
   verify-pana-dart:
