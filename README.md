@@ -24,9 +24,14 @@ Workflow for verifying package score on the [pub.dev][pub]
 uses: kmartins/workflows/.github/workflows/pana.yaml@v1
 ```
 
-Workflow for publish your package on the [pub.dev][pub]
+Workflow for publish your dart package on the [pub.dev][pub]
 ```yaml
-uses: kmartins/workflows/.github/workflows/pub_publish.yaml@v1
+uses: kmartins/workflows/.github/workflows/publish_dart_package.yaml@v1
+```
+
+Workflow for publish your flutter package on the [pub.dev][pub]
+```yaml
+uses: kmartins/workflows/.github/workflows/publish_flutter_package.yaml@v1
 ```
 
 Workflow for your Flutter app - Works with the Firebase
