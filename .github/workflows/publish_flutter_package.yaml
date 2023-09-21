@@ -6,29 +6,20 @@ on:
       environment:
         required: false
         type: string
-      flutter_channel:
-        required: false
-        type: string
-        default: "stable"
-      flutter_version:
-        required: false
-        type: string
-        default: ""
       working_directory:
         required: false
         type: string
-        default: "."
       runs_on:
         required: false
         type: string
         default: "ubuntu-latest"
-      pub_credentials:
-        required: true
-        type: string
 
 jobs:
   publish:
     environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write
+
     defaults:
       run:
         working-directory: ${{inputs.working_directory}}
@@ -47,16 +38,32 @@ jobs:
           cache: true
           cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
-      - name: 📦 Install Dependencies
+      - name: ⬇️ Download flutter binary artifacts
+        run: flutter precache --universal
+
+      - name: 🔐 Create publishing token
+        run: |
+          set -eo pipefail
+          PUB_TOKEN=$(curl --retry 5 --retry-connrefused -sLS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https://pub.dev" -H "User-Agent: actions/oidc-client" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" | jq -r '.value')
+          echo "PUB_TOKEN=${PUB_TOKEN}" >> $GITHUB_ENV
+          export PUB_TOKEN
+          flutter pub token add https://pub.dev --env-var PUB_TOKEN
+      
+      - name: 📦 Install scoop
+        if: runner.os == 'Windows'
+        run: |
+          iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+          Join-Path (Resolve-Path ~).Path "scoop\shims" >> $Env:GITHUB_PATH
+
+      - name: 🗑️ Remove pubspec_overrides.yaml
+        run: find . -type f -name "pubspec_overrides.yaml" -exec git rm -f {} \;
+        shell: bash
+
+      - name: 📦 Install dependencies
         run: flutter pub get
 
-      - name: 🔐 Setup Pub Credentials
-        run: |
-          mkdir -p $XDG_CONFIG_HOME/dart
-          echo '${{inputs.pub_credentials}}' > "$XDG_CONFIG_HOME/dart/pub-credentials.json"
-
-      - name: 🌵 Dry Run
+      - name: 🌵 Publish - dry run
         run: flutter pub publish --dry-run
 
-      - name: 📢 Publish
+      - name: 📢 Publish to pub.dev
         run: flutter pub publish -f
