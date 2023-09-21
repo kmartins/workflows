@@ -89,7 +89,7 @@ jobs:
 
     steps:
       - name: 📚 Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
@@ -155,7 +155,7 @@ jobs:
 
     steps:
       - name: 📚 Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 📦 Install Linux dependencies
         run: |
@@ -191,7 +191,7 @@ jobs:
 
     steps:
       - name: 📚 Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
