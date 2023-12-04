@@ -104,7 +104,7 @@ jobs:
 
       - name: ☕ Set up Java
         if: inputs.build_android || inputs.build_android_bundle
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "zulu"
           java-version: ${{inputs.java_version}}
